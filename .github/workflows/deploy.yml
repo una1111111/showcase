@@ -10,7 +10,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  administration: write # 允许工作流自动开启 Pages 站点
 
 # 同一时间只保留一次部署，取消排队中的旧任务
 concurrency:
@@ -25,11 +24,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-
-      # 用工作流自身的令牌自动开启 GitHub Pages（无需手动在设置里点）
-      - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/setup-node@v4
         with:
