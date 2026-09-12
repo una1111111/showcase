@@ -30,31 +30,32 @@ export default function Resume() {
         </p>
       </div>
 
-      {/* ========== 教育背景：两段经历插槽 ==========
-          ⚠️ 工作区内暂未找到简历文件，以下两段均为「待填写占位」。
-          【教育背景修改位置 —— 第 1 段 / 第 2 段】请把简历里的两段教育经历发我，
-          或直接在下面两个 EDU_* 卡片中替换学校 / 学历专业 / 时间 / 要点即可。 */}
+      {/* ========== 教育背景：两段真实经历 ==========
+          第 1 段：首都体育学院（本校本科，在读）；第 2 段：纽黑文大学（1+2+1 公费联合培养）。
+          如需调整信息，直接改下面两张卡片即可。 */}
       <h2 className="mt-12 mb-5 flex items-center gap-2.5 font-display text-xl font-bold text-ink">
         <span className="h-2.5 w-2.5 rounded-full bg-mint" aria-hidden />
         Education
       </h2>
 
       <div className="flex flex-col gap-4">
-        {/* ---------- 教育经历 第 1 段（请替换为简历中的信息） ---------- */}
+        {/* ---------- 教育经历 第 1 段：首都体育学院（本校本科 · 在读） ---------- */}
         <article className="rounded-3xl border-2 border-ink/10 bg-white p-6 shadow-sticker">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h3 className="font-display text-xl font-semibold text-ink">耶鲁大学 Yale University</h3>
+            <h3 className="font-display text-xl font-semibold text-ink">
+              首都体育学院
+              <span className="ml-2 text-sm font-medium text-ink/45">
+                Capital University of Physical Education and Sports
+              </span>
+            </h3>
             <span className="rounded-full bg-mint/10 px-3 py-0.5 text-[12px] font-semibold text-mint">
-              在读时间 · 请替换
+              2023.08 – 2027.05 · 在读
             </span>
           </div>
-          <p className="mt-1 text-sm text-ink/55">
-            学历 / 专业 · 请按简历替换（示例方向：市场营销 / 传播学）
-          </p>
+          <p className="mt-1 text-sm text-ink/55">本科 · 体育经济管理</p>
           <ul className="mt-4 flex flex-col gap-2">
             {[
-              '核心课程方向：品牌传播、消费者洞察、活动策划（请按真实课程替换）',
-              '在校期间参与校园大型活动日的传播与赞助商权益落地，把课堂方法跑通成实战经验',
+              'GPA 3.47/4.0 · 获校级一等奖学金',
             ].map((point) => (
               <li key={point} className="flex gap-3 text-[13px] leading-6 text-ink/70">
                 <span className="mt-[8px] h-2 w-2 shrink-0 rounded-full bg-mint" aria-hidden />
@@ -64,23 +65,24 @@ export default function Resume() {
           </ul>
         </article>
 
-        {/* ---------- 教育经历 第 2 段（请替换为简历中的信息） ---------- */}
-        <article className="rounded-3xl border-2 border-dashed border-ink/20 bg-white/60 p-6">
+        {/* ---------- 教育经历 第 2 段：纽黑文大学（1+2+1 公费联合培养） ---------- */}
+        <article className="rounded-3xl border-2 border-ink/10 bg-white p-6 shadow-sticker">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <h3 className="font-display text-xl font-semibold text-ink/60">
-              本科院校名称 · 请替换
+            <h3 className="font-display text-xl font-semibold text-ink">
+              纽黑文大学
+              <span className="ml-2 text-sm font-medium text-ink/45">University of New Haven</span>
             </h3>
             <span className="rounded-full bg-sky/10 px-3 py-0.5 text-[12px] font-semibold text-sky">
-              在读时间 · 请替换
+              2025.02 – 2026.05
             </span>
           </div>
-          <p className="mt-1 text-sm text-ink/55">学历 / 专业 · 请按简历替换</p>
+          <p className="mt-1 text-sm text-ink/55">体育管理 · 1+2+1 公费联合培养项目</p>
           <ul className="mt-4 flex flex-col gap-2">
             {[
-              '在校亮点 1 · 请按简历替换（如：社团活动组织者 / 校园市场项目）',
-              '在校亮点 2 · 请按简历替换（如：奖学金 / 相关课程 / 实践经历）',
+              '公费联合培养，赴美学习一年',
+              "GPA 3.58/4.0 · 入选 Dean's List（院长荣誉名单）",
             ].map((point) => (
-              <li key={point} className="flex gap-3 text-[13px] leading-6 text-ink/60">
+              <li key={point} className="flex gap-3 text-[13px] leading-6 text-ink/70">
                 <span className="mt-[8px] h-2 w-2 shrink-0 rounded-full bg-sky" aria-hidden />
                 {point}
               </li>
