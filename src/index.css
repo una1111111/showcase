@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+ * 全局基础样式（活泼浅蓝主题）
+ * 底色浅蓝 #e7f1fd / 主文字近黑 #14181f
+ * 彩色只做小面积点缀，业务内容永远是视觉主角
+ * ============================================================ */
+:root {
+  color-scheme: light;
+}
+
+html {
+  background-color: #e7f1fd;
+}
+
+body {
+  background-color: #e7f1fd;
+  color: #14181f;
+  font-family: Nunito, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 文本选中色：小面积亮橙 */
+::selection {
+  background: #ff5c00;
+  color: #fff;
+}
+
+/* 浅色滚动条 */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(20, 24, 31, 0.18);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(20, 24, 31, 0.32);
+}
+
+/* ============================================================
+ * 动画（轻快但克制：慢浮动、短入场，不干扰阅读）
+ * ============================================================ */
+
+/* 首页 Marquee：两遍文案横向无限滚动，30s 线性匀速 */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee-scroll 30s linear infinite;
+  will-change: transform;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 贴纸轻微摇摆（卡通像框上的小徽章） */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+/* 装饰元素缓慢上下漂浮（活人感，存在感很低） */
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin 0.8s linear infinite;
+}
+
+.anim-fade {
+  opacity: 0;
+  animation: fade-in 0.9s ease forwards;
+}
+.anim-rise {
+  opacity: 0;
+  animation: rise-in 0.9s cubic-bezier(0.22, 0.8, 0.3, 1) forwards;
+}
+.anim-line {
+  transform-origin: left center;
+  transform: scaleX(0);
+  animation: grow-x 1s cubic-bezier(0.22, 0.8, 0.3, 1) forwards;
+}
+.anim-page {
+  opacity: 0;
+  animation: page-in 0.6s ease forwards;
+}
+.animate-wiggle {
+  animation: wiggle 2.6s ease-in-out infinite;
+}
+.animate-float {
+  animation: float-soft 6s ease-in-out infinite;
+}
+
+/* ============================================================
+ * 无障碍：prefers-reduced-motion
+ * 偏好减少动效时，所有动画压到极短且只播放一次
+ * ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

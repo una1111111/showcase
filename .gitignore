@@ -1,0 +1,12 @@
+# 依赖
+node_modules/
+
+# 构建产物（由 GitHub Actions 在服务器上重新构建）
+dist/
+
+# 日志与本地文件
+*.log
+.DS_Store
+
+# 编辑器
+.idea/
