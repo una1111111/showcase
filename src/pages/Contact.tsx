@@ -16,10 +16,15 @@ export default function Contact() {
       dot: 'bg-sky',
     },
     {
+      label: 'WeChat',
+      value: `${CONTACT_INFO.phone}（与手机同号）`,
+      dot: 'bg-mint',
+    },
+    {
       label: 'Email',
       value: CONTACT_INFO.email,
       href: `mailto:${CONTACT_INFO.email}`,
-      dot: 'bg-mint',
+      dot: 'bg-grape',
     },
   ]
 

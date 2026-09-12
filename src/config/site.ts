@@ -24,13 +24,12 @@ export const NAV_ITEMS = [
   { id: 'contact', label: 'Contact' },
 ] as const
 
-/* 社交链接：按要求仅保留 Github（LinkedIn / Notion 已移除）
-   【替换为你的真实 Github 地址】 */
-export const SOCIAL_LINKS = [{ name: 'Github', href: 'https://github.com/your-username' }]
+/* 社交链接：按要求仅保留 Github */
+export const SOCIAL_LINKS = [{ name: 'Github', href: 'https://github.com/una1111111' }]
 
-/* 联系方式：【替换为你的真实手机号 / 邮箱】 */
+/* 联系方式（手机号与微信同号） */
 export const CONTACT_INFO = {
   name: '丁一 Ding Yi',
-  phone: '138-0000-0000',
-  email: 'your.email@example.com',
+  phone: '15311232005',
+  email: '15311232005@163.com',
 }
