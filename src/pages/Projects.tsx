@@ -1,14 +1,45 @@
 import { useState } from 'react'
-import { PROJECTS, type ProjectCase } from '../data/projects'
+import { PROJECTS, GROWTH_LINE, type ProjectCase } from '../data/projects'
 import PageHeading from '../components/PageHeading'
 
 /**
  * #projects 项目成长叙事页（全站最高权重页面）
- * 4 张默认收起的白色贴纸卡片，点击展开完整详情：
- * 业务背景 → 个人全链路动作 → 量化成果 → ✅亮点 → ❌复盘 → 🔁迭代
+ * 顶部是一条「成长叙事线」：7 个节点 = 阶段 + 当时的问题 + 得出的答案，
+ * 点击任一节点会展开并滚动到对应卡片。
+ * 卡片为「问题 → 职责 → 数据 → 洞察」闭环结构，媒体链接嵌在卡内。
  * 文案 / 数据全部来自 src/data/projects.ts，改内容不用动本组件。
  */
+
+/* 阶段 → 颜色（与叙事线节点、卡片阶段标签共用） */
+const PHASE_COLOR: Record<string, string> = {
+  发现期: 'bg-coral',
+  手段期: 'bg-sky',
+  验证期: 'bg-grape',
+  深化期: 'bg-mint',
+  独立期: 'bg-accent',
+}
+
+/* 叙事线节点用的浅色版（阶段两个字去「期」） */
+const PHASE_DOT: Record<string, string> = {
+  发现: 'bg-coral',
+  手段: 'bg-sky',
+  验证: 'bg-grape',
+  深化: 'bg-mint',
+  独立: 'bg-accent',
+}
+
 export default function Projects() {
+  /* 当前展开的卡片 id；点击叙事线节点 / 卡片头部都会更新 */
+  const [openId, setOpenId] = useState<string | null>(null)
+
+  /* 点击叙事线节点：展开对应卡片并平滑滚动到位（留顶部导航高度） */
+  const jumpToProject = (id: string) => {
+    setOpenId(id)
+    requestAnimationFrame(() => {
+      document.getElementById(`card-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
+
   return (
     <div className="anim-page mx-auto w-full max-w-5xl px-5 pb-28 pt-28 sm:px-10 sm:pt-36">
       <PageHeading kicker="Selected Work" title="快来看看我的成长经历" pill="coral" />
@@ -16,34 +47,126 @@ export default function Projects() {
       {/* 开篇导语：鲜活有互动感，不堆岗位术语，不贴 JD */}
       <div className="mt-2 max-w-3xl rounded-3xl border-2 border-ink/10 bg-white/75 p-6 shadow-sticker sm:p-8">
         <p className="text-base leading-8 text-ink/80 sm:text-lg sm:leading-9">
-          嘿，先别急着划走！👀 这里装着我从校园一路走到品牌现场的几段真实经历——
-          一场活动怎么从一句「我们搞点事情吧」长成几百上千人到场的大场面，
-          我在里面<span className="font-bold text-coral">统筹了什么、玩出了什么、踩过哪些坑、又攒下了什么</span>，
+          嘿，先别急着划走！👀 这里装着我从校园定向赛一路做到省级活动的七段真实经历——
+          每一段都从上一段留下的<span className="font-bold text-coral">一个问题</span>开始，
+          我在里面<span className="font-bold text-coral">做了什么、看到了什么数字、又想明白了什么</span>，
           全都摊开给你看。
         </p>
         <p className="mt-3 text-sm leading-7 text-ink/55">
-          翻完这六张卡片，你会看到一个活动运营新人，是怎么把全链路策划、玩法创新、跨部门推动和复盘沉淀一点点练熟的。
+          建议先顺着下面这条「成长叙事线」往下滑——点任意节点，就能跳转到对应的项目卡片。
         </p>
       </div>
+
+      {/* ========== 成长叙事线 ========== */}
+      <GrowthThread onJump={jumpToProject} />
 
       {/* 项目卡片列表：留白充足 */}
       <div className="mt-12 flex flex-col gap-5">
         {PROJECTS.map((item) => (
-          <ProjectCard key={item.id} item={item} />
+          <ProjectCard
+            key={item.id}
+            item={item}
+            open={openId === item.id}
+            onToggle={() => setOpenId(openId === item.id ? null : item.id)}
+          />
         ))}
       </div>
     </div>
   )
 }
 
+/* ---------------- 成长叙事线：7 个问答节点 ---------------- */
+
+function GrowthThread({ onJump }: { onJump: (id: string) => void }) {
+  return (
+    <section aria-label="成长叙事线" className="mt-10">
+      <h2 className="mb-5 flex items-center gap-2.5 font-display text-xl font-bold text-ink">
+        <span className="h-2.5 w-2.5 rounded-full bg-coral" aria-hidden />
+        我的成长叙事线
+        <span className="font-body text-xs font-normal text-ink/40">（问题串成的一条线）</span>
+      </h2>
+
+      {/* 桌面端：横向排列、由细线串联；节点可点击跳转 */}
+      <ol className="hidden gap-3 md:grid md:grid-cols-7">
+        {GROWTH_LINE.map((node, i) => (
+          <li key={node.projectId} className="relative">
+            {/* 节点之间的连接线（最后一个不画） */}
+            {i !== GROWTH_LINE.length - 1 && (
+              <span className="absolute left-[calc(50%+14px)] top-[9px] h-0.5 w-[calc(100%-28px+0.75rem)] bg-ink/15" aria-hidden />
+            )}
+            <button
+              type="button"
+              onClick={() => onJump(node.projectId)}
+              className="group flex w-full flex-col items-center text-center"
+            >
+              <span
+                className={`relative z-10 flex h-[18px] w-[18px] items-center justify-center rounded-full ${PHASE_DOT[node.phase]} ring-4 ring-paper transition-transform duration-300 group-hover:scale-125`}
+                aria-hidden
+              />
+              <span className="mt-2 rounded-full bg-ink/[0.06] px-2 py-0.5 font-display text-[10px] font-bold tracking-wider text-ink/60">
+                {node.phase}
+              </span>
+              <span className="mt-1.5 text-[11px] font-semibold leading-4 text-ink/70 transition-colors duration-300 group-hover:text-coral">
+                {node.question}
+              </span>
+              <span className="mt-1 text-[10px] leading-4 text-ink/40">{node.answer}</span>
+            </button>
+          </li>
+        ))}
+      </ol>
+
+      {/* 移动端：纵向时间线 */}
+      <ol className="flex flex-col md:hidden">
+        {GROWTH_LINE.map((node, i) => (
+          <li key={node.projectId} className="relative flex gap-4 pb-5 last:pb-0">
+            {/* 竖向连接线 */}
+            {i !== GROWTH_LINE.length - 1 && (
+              <span className="absolute left-[8px] top-5 h-[calc(100%-12px)] w-0.5 bg-ink/15" aria-hidden />
+            )}
+            <button
+              type="button"
+              onClick={() => onJump(node.projectId)}
+              className="group flex flex-1 items-start gap-4 text-left"
+            >
+              <span
+                className={`relative z-10 mt-1 h-[18px] w-[18px] shrink-0 rounded-full ${PHASE_DOT[node.phase]} ring-4 ring-paper transition-transform duration-300 group-hover:scale-125`}
+                aria-hidden
+              />
+              <span className="min-w-0">
+                <span className="mr-2 rounded-full bg-ink/[0.06] px-2 py-0.5 font-display text-[10px] font-bold tracking-wider text-ink/60">
+                  {node.phase}
+                </span>
+                <span className="text-[13px] font-semibold text-ink/75 transition-colors duration-300 group-hover:text-coral">
+                  {node.question}
+                </span>
+                <span className="mt-0.5 block text-[11px] leading-4 text-ink/40">{node.answer}</span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}
+
 /* ---------------- 单张可展开项目卡片 ---------------- */
 
-function ProjectCard({ item }: { item: ProjectCase }) {
-  const [open, setOpen] = useState(false)
+function ProjectCard({
+  item,
+  open,
+  onToggle,
+}: {
+  item: ProjectCase
+  open: boolean
+  onToggle: () => void
+}) {
+  const roleParagraphs = Array.isArray(item.role) ? item.role : [item.role]
+  const phaseDot = PHASE_COLOR[item.phase] ?? 'bg-sky'
 
   return (
     <article
-      className={`rounded-3xl border-2 transition-all duration-300 ${
+      id={`card-${item.id}`}
+      className={`scroll-mt-24 rounded-3xl border-2 transition-all duration-300 ${
         open
           ? 'border-ink/25 bg-white shadow-card'
           : 'border-ink/10 bg-white/80 shadow-sticker hover:-translate-y-1.5 hover:border-ink/20 hover:shadow-card'
@@ -54,7 +177,7 @@ function ProjectCard({ item }: { item: ProjectCase }) {
         type="button"
         aria-expanded={open}
         aria-controls={`panel-${item.id}`}
-        onClick={() => setOpen((v) => !v)}
+        onClick={onToggle}
         className="flex w-full items-start gap-4 px-5 py-6 text-left sm:gap-7 sm:px-8 sm:py-7"
       >
         {/* 大号彩色序号（贴纸感） */}
@@ -62,14 +185,24 @@ function ProjectCard({ item }: { item: ProjectCase }) {
           {item.no}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="inline-block rounded-full bg-grape/10 px-3 py-0.5 font-display text-[11px] font-bold uppercase tracking-[0.18em] text-grape">
-            {item.org}
+          {/* 第一行：合作方 + 阶段 + 时间 */}
+          <span className="flex flex-wrap items-center gap-2">
+            <span className="inline-block rounded-full bg-grape/10 px-3 py-0.5 font-display text-[11px] font-bold uppercase tracking-[0.14em] text-grape">
+              {item.org}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-ink/[0.05] px-2.5 py-0.5 text-[11px] font-semibold text-ink/55">
+              <span className={`h-1.5 w-1.5 rounded-full ${phaseDot}`} aria-hidden />
+              {item.phase}
+            </span>
+            <span className="rounded-full bg-ink/[0.05] px-2.5 py-0.5 text-[11px] font-semibold tabular-nums text-ink/55">
+              {item.date}
+            </span>
           </span>
           <span className="mt-2.5 block font-display text-lg font-semibold leading-snug text-ink sm:text-xl">
             {item.title}
           </span>
-          {/* 收起态：能力标签（彩色小面积点缀） */}
-          <span className="mt-3 flex flex-wrap gap-2">
+          {/* 收起态：能力标签 + 时间线数字贴纸 */}
+          <span className="mt-3 flex flex-wrap items-center gap-2">
             {item.tags.map((tag) => (
               <span
                 key={tag}
@@ -78,14 +211,15 @@ function ProjectCard({ item }: { item: ProjectCase }) {
                 {tag}
               </span>
             ))}
+            <span className="ml-auto rounded-full border-2 border-sun/70 bg-sun/20 px-3 py-0.5 font-display text-[11px] font-bold tabular-nums text-ink shadow-sticker">
+              {item.stat}
+            </span>
           </span>
         </span>
         {/* 展开 / 收起圆钮：纯 CSS 字符，不引入额外图标库 */}
         <span
           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 text-xl leading-none transition-all duration-300 ${
-            open
-              ? 'rotate-0 border-ink bg-ink text-paper'
-              : 'border-ink/25 bg-white text-ink group-hover:border-ink'
+            open ? 'border-ink bg-ink text-paper' : 'border-ink/25 bg-white text-ink'
           }`}
           aria-hidden
         >
@@ -101,19 +235,31 @@ function ProjectCard({ item }: { item: ProjectCase }) {
         }`}
       >
         <div className="overflow-hidden">
-          <div className="flex flex-col gap-7 px-5 pb-8 sm:px-8">
-            <Section title="项目背景">
-              <p className="text-sm leading-7 text-ink/70">{item.background}</p>
+          <div className="flex flex-col gap-6 px-5 pb-8 sm:px-8">
+            {/* 出发前的问题：阳光黄贴纸底 */}
+            <section className="rounded-2xl border-2 border-sun/60 bg-sun/[0.12] p-5">
+              <h3 className="mb-1.5 flex items-center gap-2 font-display text-[12px] font-bold uppercase tracking-[0.18em] text-ink/60">
+                <span aria-hidden>💭</span>
+                这个项目之前，我在想
+              </h3>
+              <p className="font-display text-base font-semibold leading-7 text-ink">{item.question}</p>
+            </section>
+
+            {/* 核心职责 */}
+            <Section title="核心职责">
+              <div className="flex flex-col gap-3">
+                {roleParagraphs.map((p) => (
+                  <p key={p} className="text-sm leading-7 text-ink/70">
+                    {p}
+                  </p>
+                ))}
+              </div>
             </Section>
 
-            <Section title="我的角色与全链路动作">
-              <p className="text-sm leading-7 text-ink/70">{item.role}</p>
-            </Section>
-
-            {/* 量化成果：最高视觉权重，橙色贴纸卡片 */}
+            {/* 关键数据 / 产出：最高视觉权重，橙色贴纸卡片 */}
             <section className="rounded-2xl border-2 border-accent/30 bg-accent/[0.07] p-5">
               <h3 className="mb-3 inline-block rounded-full bg-accent px-3 py-1 font-display text-[11px] font-bold uppercase tracking-[0.2em] text-white">
-                量化业务成果
+                关键数据 / 产出
               </h3>
               <ul className="flex flex-col gap-2.5">
                 {item.results.map((r) => (
@@ -123,25 +269,79 @@ function ProjectCard({ item }: { item: ProjectCase }) {
                   </li>
                 ))}
               </ul>
+              {/* 数据口径说明（可选） */}
+              {item.note && (
+                <p className="mt-3 border-t border-dashed border-accent/30 pt-3 text-[11px] leading-5 text-ink/45">
+                  {item.note}
+                </p>
+              )}
             </section>
 
-            {/* ✅ / ❌ / 🔁 复盘三件套：薄荷绿 / 珊瑚粉 / 天空蓝 淡彩底 */}
-            <div className="grid gap-4 sm:grid-cols-3">
-              <ReviewBlock emoji="✅" title="亮点总结" tint="bg-mint/[0.08] border-mint/25" lines={item.highlights} />
-              <ReviewBlock emoji="❌" title="局限 & 复盘" tint="bg-coral/[0.07] border-coral/25" lines={item.limitations} />
-              <ReviewBlock emoji="🔁" title="迭代优化思路" tint="bg-sky/[0.08] border-sky/25" lines={item.iterations} />
-            </div>
+            {/* 核心洞察：薄荷绿底，回答「项目之前的问题」 */}
+            <section className="rounded-2xl border-2 border-mint/30 bg-mint/[0.08] p-5">
+              <h3 className="mb-1.5 flex items-center gap-2 font-display text-[12px] font-bold uppercase tracking-[0.18em] text-mint">
+                <span aria-hidden>💡</span>
+                我得到的答案 · 核心洞察
+              </h3>
+              <p className="text-sm font-semibold leading-7 text-ink/80">{item.insight}</p>
+            </section>
 
-            {/* 可选外链：如新闻官 Agent 在线操作台（新标签页打开） */}
-            {item.link && (
-              <a
-                href={item.link.href}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex w-fit items-center gap-2 rounded-full bg-grape px-6 py-3 font-display text-sm font-bold text-white shadow-sticker transition-transform duration-300 hover:-translate-y-0.5"
-              >
-                {item.link.label}
-              </a>
+            {/* 状态标记（如橘马「策划中 / 待验证」） */}
+            {item.status && (
+              <p className="inline-flex w-fit items-center gap-2 rounded-full border-2 border-dashed border-coral/60 bg-coral/[0.07] px-4 py-1.5 text-[12px] font-bold text-coral">
+                <span aria-hidden>🚧</span>
+                {item.status}
+              </p>
+            )}
+
+            {/* 媒体报道 / 社会证明（可选） */}
+            {item.media && item.media.length > 0 && (
+              <section>
+                <h3 className="mb-2.5 flex items-center gap-2 font-display text-[13px] font-bold uppercase tracking-[0.18em] text-ink/55">
+                  <span className="h-1.5 w-4 rounded-full bg-sun" aria-hidden />
+                  媒体报道
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {item.media.map((m) => (
+                    <a
+                      key={m.url}
+                      href={m.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full border-2 border-ink/15 bg-white px-4 py-1.5 text-[12px] font-semibold text-ink/70 transition-all duration-300 hover:-translate-y-0.5 hover:border-ink/40 hover:text-ink"
+                    >
+                      {m.name}
+                      <span aria-hidden className="text-[10px]">
+                        ↗
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 链接区：外部操作台（实心）+ 站内演示（描边） */}
+            {(item.link || item.insideLink) && (
+              <div className="flex flex-wrap items-center gap-3">
+                {item.link && (
+                  <a
+                    href={item.link.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-grape px-6 py-3 font-display text-sm font-bold text-white shadow-sticker transition-transform duration-300 hover:-translate-y-0.5"
+                  >
+                    {item.link.label}
+                  </a>
+                )}
+                {item.insideLink && (
+                  <a
+                    href={item.insideLink.href}
+                    className="inline-flex items-center gap-2 rounded-full border-2 border-grape/50 px-5 py-[10px] font-display text-sm font-bold text-grape transition-all duration-300 hover:-translate-y-0.5 hover:bg-grape/5"
+                  >
+                    {item.insideLink.label}
+                  </a>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -160,34 +360,6 @@ function Section({ title, children }: { title: string; children: React.ReactNode
         {title}
       </h3>
       {children}
-    </section>
-  )
-}
-
-function ReviewBlock({
-  emoji,
-  title,
-  tint,
-  lines,
-}: {
-  emoji: string
-  title: string
-  tint: string
-  lines: string[]
-}) {
-  return (
-    <section className={`rounded-2xl border p-4 ${tint}`}>
-      <h4 className="mb-3 flex items-center gap-2 font-display text-[13px] font-bold text-ink">
-        <span aria-hidden>{emoji}</span>
-        {title}
-      </h4>
-      <ul className="flex flex-col gap-2">
-        {lines.map((line) => (
-          <li key={line} className="text-[13px] leading-6 text-ink/70">
-            {line}
-          </li>
-        ))}
-      </ul>
     </section>
   )
 }
