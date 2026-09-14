@@ -33,7 +33,7 @@ export interface MediaLink {
 export interface ProjectCase {
   id: string
   no: string // 卡片序号
-  phase: string // 阶段标签
+  phase: string // 成长阶段（仅用于叙事线圆点配色，页面不显示阶段文字）
   date: string // 项目时间
   org: string // 实习单位 / 合作方
   title: string // 项目标题

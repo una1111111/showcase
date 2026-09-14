@@ -10,16 +10,7 @@ import PageHeading from '../components/PageHeading'
  * 文案 / 数据全部来自 src/data/projects.ts，改内容不用动本组件。
  */
 
-/* 阶段 → 颜色（与叙事线节点、卡片阶段标签共用） */
-const PHASE_COLOR: Record<string, string> = {
-  发现期: 'bg-coral',
-  手段期: 'bg-sky',
-  验证期: 'bg-grape',
-  深化期: 'bg-mint',
-  独立期: 'bg-accent',
-}
-
-/* 叙事线节点用的浅色版（阶段两个字去「期」） */
+/* 叙事线节点圆点颜色（按成长阶段着色，仅显示彩色圆点，不显示阶段文字） */
 const PHASE_DOT: Record<string, string> = {
   发现: 'bg-coral',
   手段: 'bg-sky',
@@ -103,10 +94,7 @@ function GrowthThread({ onJump }: { onJump: (id: string) => void }) {
                 className={`relative z-10 flex h-[18px] w-[18px] items-center justify-center rounded-full ${PHASE_DOT[node.phase]} ring-4 ring-paper transition-transform duration-300 group-hover:scale-125`}
                 aria-hidden
               />
-              <span className="mt-2 rounded-full bg-ink/[0.06] px-2 py-0.5 font-display text-[10px] font-bold tracking-wider text-ink/60">
-                {node.phase}
-              </span>
-              <span className="mt-1.5 text-[11px] font-semibold leading-4 text-ink/70 transition-colors duration-300 group-hover:text-coral">
+              <span className="mt-2.5 text-[11px] font-semibold leading-4 text-ink/70 transition-colors duration-300 group-hover:text-coral">
                 {node.question}
               </span>
               <span className="mt-1 text-[10px] leading-4 text-ink/40">{node.answer}</span>
@@ -133,9 +121,6 @@ function GrowthThread({ onJump }: { onJump: (id: string) => void }) {
                 aria-hidden
               />
               <span className="min-w-0">
-                <span className="mr-2 rounded-full bg-ink/[0.06] px-2 py-0.5 font-display text-[10px] font-bold tracking-wider text-ink/60">
-                  {node.phase}
-                </span>
                 <span className="text-[13px] font-semibold text-ink/75 transition-colors duration-300 group-hover:text-coral">
                   {node.question}
                 </span>
@@ -161,7 +146,6 @@ function ProjectCard({
   onToggle: () => void
 }) {
   const roleParagraphs = Array.isArray(item.role) ? item.role : [item.role]
-  const phaseDot = PHASE_COLOR[item.phase] ?? 'bg-sky'
 
   return (
     <article
@@ -185,14 +169,10 @@ function ProjectCard({
           {item.no}
         </span>
         <span className="min-w-0 flex-1">
-          {/* 第一行：合作方 + 阶段 + 时间 */}
+          {/* 第一行：合作方 + 时间 */}
           <span className="flex flex-wrap items-center gap-2">
             <span className="inline-block rounded-full bg-grape/10 px-3 py-0.5 font-display text-[11px] font-bold uppercase tracking-[0.14em] text-grape">
               {item.org}
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-ink/[0.05] px-2.5 py-0.5 text-[11px] font-semibold text-ink/55">
-              <span className={`h-1.5 w-1.5 rounded-full ${phaseDot}`} aria-hidden />
-              {item.phase}
             </span>
             <span className="rounded-full bg-ink/[0.05] px-2.5 py-0.5 text-[11px] font-semibold tabular-nums text-ink/55">
               {item.date}
