@@ -94,24 +94,27 @@ export default function Header({ route, playEntrance }: HeaderProps) {
               ))}
             </nav>
 
-            <div className="h-4 w-px bg-ink/15" />
-
-            <nav className="flex items-center gap-5">
-              {SOCIAL_LINKS.map((s, i) => (
-                <a
-                  key={s.name}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={entrance(
-                    'font-display text-[15px] font-semibold text-ink/70 transition-opacity duration-300 hover:opacity-60',
-                  )}
-                  style={entranceStyle(700 + i * 80)}
-                >
-                  {s.name}
-                </a>
-              ))}
-            </nav>
+            {SOCIAL_LINKS.length > 0 && (
+              <>
+                <div className="h-4 w-px bg-ink/15" />
+                <nav className="flex items-center gap-5">
+                  {SOCIAL_LINKS.map((s, i) => (
+                    <a
+                      key={s.name}
+                      href={s.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={entrance(
+                        'font-display text-[15px] font-semibold text-ink/70 transition-opacity duration-300 hover:opacity-60',
+                      )}
+                      style={entranceStyle(700 + i * 80)}
+                    >
+                      {s.name}
+                    </a>
+                  ))}
+                </nav>
+              </>
+            )}
           </div>
 
           {/* 移动端：汉堡按钮（抽屉打开时旋转变淡，与右上角 X 完成「变形」交接） */}
@@ -170,30 +173,32 @@ export default function Header({ route, playEntrance }: HeaderProps) {
             </nav>
           </div>
 
-          {/* FIND ME：社交链接（仅 Github），竖向排布 + 交错延迟入场 */}
-          <div>
-            <p className="mb-6 font-display text-[11px] font-bold uppercase tracking-[0.3em] text-ink/40">
-              Find Me
-            </p>
-            <nav className="flex flex-col gap-4">
-              {SOCIAL_LINKS.map((s, i) => (
-                <a
-                  key={s.name}
-                  href={s.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`w-fit font-display text-xl text-ink/70 transition-all duration-500 hover:opacity-60 ${
-                    drawerOpen ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
-                  }`}
-                  style={{
-                    transitionDelay: drawerOpen ? `${420 + i * 70}ms` : '0ms',
-                  }}
-                >
-                  {s.name}
-                </a>
-              ))}
-            </nav>
-          </div>
+          {/* FIND ME：社交链接；为空时整块隐藏 */}
+          {SOCIAL_LINKS.length > 0 && (
+            <div>
+              <p className="mb-6 font-display text-[11px] font-bold uppercase tracking-[0.3em] text-ink/40">
+                Find Me
+              </p>
+              <nav className="flex flex-col gap-4">
+                {SOCIAL_LINKS.map((s, i) => (
+                  <a
+                    key={s.name}
+                    href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`w-fit font-display text-xl text-ink/70 transition-all duration-500 hover:opacity-60 ${
+                      drawerOpen ? 'translate-x-0 opacity-100' : 'translate-x-6 opacity-0'
+                    }`}
+                    style={{
+                      transitionDelay: drawerOpen ? `${420 + i * 70}ms` : '0ms',
+                    }}
+                  >
+                    {s.name}
+                  </a>
+                ))}
+              </nav>
+            </div>
+          )}
 
           <p className="absolute bottom-8 font-display text-[11px] tracking-[0.25em] text-ink/30">
             © 2026 DING YI

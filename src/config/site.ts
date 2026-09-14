@@ -24,8 +24,8 @@ export const NAV_ITEMS = [
   { id: 'contact', label: 'Contact' },
 ] as const
 
-/* 社交链接：按要求仅保留 Github */
-export const SOCIAL_LINKS = [{ name: 'Github', href: 'https://github.com/una1111111' }]
+/* 社交链接：已按要求移除 Github；如需恢复，往数组里加 { name, href } 即可 */
+export const SOCIAL_LINKS: { name: string; href: string }[] = []
 
 /* 联系方式（手机号与微信同号） */
 export const CONTACT_INFO = {

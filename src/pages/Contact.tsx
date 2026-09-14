@@ -1,9 +1,9 @@
-import { CONTACT_INFO, SOCIAL_LINKS } from '../config/site'
+import { CONTACT_INFO, SOCIAL_LINKS, RESUME_SRC } from '../config/site'
 import PageHeading from '../components/PageHeading'
 
 /**
  * #contact 联系我页面
- * 姓名 / 手机 / 邮箱 + 社交入口（按要求仅保留 Github）。
+ * 姓名 / 手机 / 微信 / 邮箱 + 简历下载入口。
  * 个人信息统一在 src/config/site.ts 修改。
  */
 export default function Contact() {
@@ -64,24 +64,41 @@ export default function Contact() {
         ))}
       </dl>
 
-      {/* 社交入口：仅 Github */}
-      <h2 className="mt-10 mb-4 flex items-center gap-2.5 font-display text-base font-bold text-ink/60">
-        <span className="h-2 w-2 rounded-full bg-grape" aria-hidden />
-        Find Me Online
-      </h2>
-      <div className="flex flex-wrap gap-3">
-        {SOCIAL_LINKS.map((s) => (
-          <a
-            key={s.name}
-            href={s.href}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full border-2 border-ink bg-ink px-7 py-2.5 font-display text-sm font-bold text-paper transition-transform duration-300 hover:-translate-y-0.5"
-          >
-            {s.name} ↗
-          </a>
-        ))}
+      {/* 简历下载（PDF） */}
+      <div className="mt-10 flex flex-wrap items-center gap-4">
+        <a
+          href={RESUME_SRC}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-display text-sm font-bold text-white shadow-sticker transition-transform duration-300 hover:-translate-y-0.5"
+        >
+          下载我的简历 PDF ↗
+        </a>
+        <span className="font-display text-[12px] text-ink/45">丁一-简历A0914.pdf</span>
       </div>
+
+      {/* 社交入口：当前已按要求移除，SOCIAL_LINKS 为空时整块不显示 */}
+      {SOCIAL_LINKS.length > 0 && (
+        <>
+          <h2 className="mt-10 mb-4 flex items-center gap-2.5 font-display text-base font-bold text-ink/60">
+            <span className="h-2 w-2 rounded-full bg-grape" aria-hidden />
+            Find Me Online
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {SOCIAL_LINKS.map((s) => (
+              <a
+                key={s.name}
+                href={s.href}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full border-2 border-ink bg-ink px-7 py-2.5 font-display text-sm font-bold text-paper transition-transform duration-300 hover:-translate-y-0.5"
+              >
+                {s.name} ↗
+              </a>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   )
 }

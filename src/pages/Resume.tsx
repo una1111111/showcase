@@ -92,12 +92,14 @@ export default function Resume() {
       </div>
 
       {/* ========== 简历下载按钮 ==========
-          【简历PDF链接位置】把文件命名为 resume.pdf 放到 public/ 目录即可；
-          如需更换文件名 / 路径，改 src/config/site.ts 中的 RESUME_SRC。 */}
+          简历文件位于 public/resume.pdf，更换文件时直接覆盖即可；
+          如需改文件名 / 路径，改 src/config/site.ts 中的 RESUME_SRC。 */}
       <div className="mt-12">
         <a
           href={RESUME_SRC}
-          download="Ding-Yi-Activity-Marketing-Resume.pdf"
+          target="_blank"
+          rel="noreferrer"
+          download="丁一-简历A0914.pdf"
           className="inline-flex items-center gap-3 rounded-full bg-accent px-8 py-4 font-display text-base font-bold tracking-wide text-white shadow-sticker transition-transform duration-300 hover:-translate-y-0.5"
         >
           下载我的简历 PDF
@@ -106,7 +108,7 @@ export default function Resume() {
           </span>
         </a>
         <p className="mt-3 text-[12px] text-ink/40">
-          （部署前记得把简历放入 public/resume.pdf，当前为替换位置标记）
+          点击在新标签页打开预览，或右键另存为下载
         </p>
       </div>
     </div>
