@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PROJECTS, GROWTH_LINE, type ProjectCase } from '../data/projects'
+import { PROJECTS, GROWTH_LINE, type ProjectCase, type ProjectSection } from '../data/projects'
 import PageHeading from '../components/PageHeading'
 
 /**
@@ -145,7 +145,11 @@ function ProjectCard({
   open: boolean
   onToggle: () => void
 }) {
-  const roleParagraphs = Array.isArray(item.role) ? item.role : [item.role]
+  const roleParagraphs = item.role
+    ? Array.isArray(item.role)
+      ? item.role
+      : [item.role]
+    : []
 
   return (
     <article
@@ -225,16 +229,22 @@ function ProjectCard({
               <p className="font-display text-base font-semibold leading-7 text-ink">{item.question}</p>
             </section>
 
-            {/* 核心职责 */}
-            <Section title="核心职责">
-              <div className="flex flex-col gap-3">
-                {roleParagraphs.map((p) => (
-                  <p key={p} className="text-sm leading-7 text-ink/70">
-                    {p}
-                  </p>
-                ))}
-              </div>
-            </Section>
+            {/* 模块化叙事（如宜都足球的 5 个策略模块）；没有 sections 时退回「核心职责」 */}
+            {item.sections ? (
+              <SectionsList sections={item.sections} />
+            ) : (
+              roleParagraphs.length > 0 && (
+                <Section title="核心职责">
+                  <div className="flex flex-col gap-3">
+                    {roleParagraphs.map((p) => (
+                      <p key={p} className="text-sm leading-7 text-ink/70">
+                        {p}
+                      </p>
+                    ))}
+                  </div>
+                </Section>
+              )
+            )}
 
             {/* 关键数据 / 产出：最高视觉权重，橙色贴纸卡片 */}
             <section className="rounded-2xl border-2 border-accent/30 bg-accent/[0.07] p-5">
@@ -257,14 +267,16 @@ function ProjectCard({
               )}
             </section>
 
-            {/* 核心洞察：薄荷绿底，回答「项目之前的问题」 */}
-            <section className="rounded-2xl border-2 border-mint/30 bg-mint/[0.08] p-5">
-              <h3 className="mb-1.5 flex items-center gap-2 font-display text-[12px] font-bold uppercase tracking-[0.18em] text-mint">
-                <span aria-hidden>💡</span>
-                我得到的答案 · 核心洞察
-              </h3>
-              <p className="text-sm font-semibold leading-7 text-ink/80">{item.insight}</p>
-            </section>
+            {/* 核心洞察：薄荷绿底，回答「项目之前的问题」（含复盘模块的卡片不再重复展示） */}
+            {item.insight && (
+              <section className="rounded-2xl border-2 border-mint/30 bg-mint/[0.08] p-5">
+                <h3 className="mb-1.5 flex items-center gap-2 font-display text-[12px] font-bold uppercase tracking-[0.18em] text-mint">
+                  <span aria-hidden>💡</span>
+                  我得到的答案 · 核心洞察
+                </h3>
+                <p className="text-sm font-semibold leading-7 text-ink/80">{item.insight}</p>
+              </section>
+            )}
 
             {/* 状态标记（如橘马「策划中 / 待验证」） */}
             {item.status && (
@@ -327,6 +339,62 @@ function ProjectCard({
         </div>
       </div>
     </article>
+  )
+}
+
+/* ---------------- 模块化叙事：多个 emoji 小模块（如宜都足球的策略五段） ---------------- */
+
+function SectionsList({ sections }: { sections: ProjectSection[] }) {
+  return (
+    <div className="flex flex-col gap-4">
+      {sections.map((s, i) => (
+        <section
+          key={s.title}
+          className="rounded-2xl border-2 border-ink/10 bg-white p-5 shadow-sticker"
+        >
+          {/* 模块标题：emoji 贴纸 + 序号 + 标题 */}
+          <h3 className="mb-3 flex items-center gap-2.5">
+            <span
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-paper text-lg shadow-sticker"
+              aria-hidden
+            >
+              {s.icon}
+            </span>
+            <span className="font-display text-[15px] font-bold leading-snug text-ink">
+              <span className="mr-2 align-middle text-[11px] font-semibold tabular-nums text-ink/30">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              {s.title}
+            </span>
+          </h3>
+
+          {/* 普通段落 */}
+          {s.paragraphs?.map((p) => (
+            <p key={p} className="text-sm leading-7 text-ink/70 [&:not(:first-child)]:mt-2.5">
+              {p}
+            </p>
+          ))}
+
+          {/* 带加粗引导词的要点：浅蓝贴纸底 */}
+          {s.points && s.points.length > 0 && (
+            <ul className="mt-3 flex flex-col gap-2.5">
+              {s.points.map((pt) => (
+                <li
+                  key={pt.lead}
+                  className="flex gap-3 rounded-xl bg-paper/70 p-3.5 text-[13px] leading-6"
+                >
+                  <span className="mt-[8px] h-2 w-2 shrink-0 rounded-full bg-sky" aria-hidden />
+                  <span className="text-ink/70">
+                    <span className="font-display font-bold text-ink">{pt.lead}：</span>
+                    {pt.text}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))}
+    </div>
   )
 }
 
