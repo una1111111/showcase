@@ -195,9 +195,11 @@ function ProjectCard({
                 {tag}
               </span>
             ))}
-            <span className="ml-auto rounded-full border-2 border-sun/70 bg-sun/20 px-3 py-0.5 font-display text-[11px] font-bold tabular-nums text-ink shadow-sticker">
-              {item.stat}
-            </span>
+            {item.stat && (
+              <span className="ml-auto rounded-full border-2 border-sun/70 bg-sun/20 px-3 py-0.5 font-display text-[11px] font-bold tabular-nums text-ink shadow-sticker">
+                {item.stat}
+              </span>
+            )}
           </span>
         </span>
         {/* 展开 / 收起圆钮：纯 CSS 字符，不引入额外图标库 */}

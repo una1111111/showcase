@@ -47,7 +47,7 @@ export interface ProjectCase {
   org: string // 实习单位 / 合作方
   title: string // 项目标题
   tags: string[] // 卡片收起态展示的能力标签
-  stat: string // 时间线数字（记忆点）
+  stat?: string // 时间线数字（记忆点，可选）
   question: string // 项目之前在想的问题
   role?: string | string[] // 核心职责（可多段）；若提供 sections 则不展示
   sections?: ProjectSection[] // 模块化叙事（提供时替代「核心职责」）
@@ -88,7 +88,6 @@ export const PROJECTS: ProjectCase[] = [
     org: '北京焰火文化',
     title: 'Nike 跑百校',
     tags: ['品牌活动', '物料统筹', '互动区运营'],
-    stat: '32 支 / 320 人',
     question: '线下活动仅仅是一次性曝光吗？一场活动怎么持续放大品牌对目标人群的影响力？',
     role: '支持品牌校园营销项目的区域落地执行。协助梳理活动标准、物料与流程规范；对接校园 KOC 与学生社群，传递品牌营销目标、活动规则与内容方向；配合线下活动的现场管理、体验环节运营，保障品牌触点、视觉、体验符合品牌营销标准。',
     results: [
